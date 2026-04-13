@@ -59,7 +59,21 @@
       "credits": "4",
       "totalSemHours": 45,
       "conducted": 14,
-      "absent": 1
+      "absent": 1,
+      "labConducted": null
+    },
+    {
+      "id": "3b3427e6-7a35-49be-88b0-6d508203155d",
+      "subject": "DSD",
+      "isLab": true,
+      "labDuration": 2,
+      "totalSemHours": 45,
+      "totalLabHours": 30,
+      "credits": "",
+      "conducted": 12,
+      "absent": 0,
+      "labConducted": 8,
+      "labAbsent": 2
     }
   ]
 }
