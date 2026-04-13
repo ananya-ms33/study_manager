@@ -16,6 +16,11 @@ const DATA_FILE = path.resolve(__dirname, 'exams.json');
 const USERNAME = process.env.ADMIN_USERNAME;
 const PASSWORD = process.env.ADMIN_PASSWORD;
 
+if (!USERNAME || !PASSWORD) {
+  console.warn("⚠️  WARNING: ADMIN_USERNAME or ADMIN_PASSWORD environment variables are not set.");
+  console.warn("⚠️  Login to the dashboard will not work until these are configured.");
+}
+
 app.use(cors());
 app.use(express.json());
 

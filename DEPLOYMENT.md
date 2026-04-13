@@ -18,9 +18,13 @@ Render will ask for the following details:
 - **Start Command**: `node server.js`
 
 ## 4. Set Environment Variables
-Your app currently has the username/password hardcoded in `server.js` (`ananya` / `ts123`) for convenience, but Render allows you to change them easily.
-1.  Scroll down to the **Environment** section.
-2.  (Optional) You can add custom environment variables if you ever want to change the credentials without editing the code.
+For security, your app uses environment variables for login credentials. You must set these in Render for the login to work.
+1.  Scroll down to the **Environment** section in your Render dashboard.
+2.  Click **Add Environment Variable**.
+3.  Add the following two variables:
+    *   **Key**: `ADMIN_USERNAME` | **Value**: `ananya` (or your chosen username)
+    *   **Key**: `ADMIN_PASSWORD` | **Value**: `ts123` (or your chosen password)
+4.  Click **Save Changes**. Render will automatically redeploy your app with these settings.
 
 ## 5. Deploy!
 - Click **Create Web Service**.
