@@ -645,11 +645,40 @@ body {
 /* Responsive */
 @media (max-width: 768px) {
   .main-wrapper {
-    padding: 90px 20px 40px 20px;
+    padding: 85px 16px 40px 16px;
+  }
+
+  .view-header h1 {
+    font-size: 1.8rem !important;
   }
 
   .attendance-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Stack form inputs on mobile */
+  .glass-panel.compact-panel > div {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .sidebar {
+    width: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  .view-header h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  .h-counter span {
+    font-size: 0.75rem;
+  }
+
+  .dash-item label {
+    font-size: 0.55rem;
   }
 }
 

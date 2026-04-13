@@ -12,8 +12,9 @@ const PORT = process.env.PORT || 3001;
 const DATA_FILE = path.resolve(__dirname, 'exams.json');
 
 // Credentials (provided by user)
-const USERNAME = 'ananya';
-const PASSWORD = 'ts123';
+// Credentials (secured via Environment Variables)
+const USERNAME = process.env.ADMIN_USERNAME;
+const PASSWORD = process.env.ADMIN_PASSWORD;
 
 app.use(cors());
 app.use(express.json());
