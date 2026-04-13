@@ -13,6 +13,7 @@ export default function App() {
   const [date, setDate] = useState("");
   const [openSegments, setOpenSegments] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem("isLoggedIn") === "true");
+  const [user, setUser] = useState({ username: localStorage.getItem("username") || "" });
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -117,8 +118,10 @@ export default function App() {
 
   const sortedExams = [...data.exams].sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  const handleLogin = () => {
+  const handleLogin = (username) => {
     localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("username", username);
+    setUser({ username });
     setIsLoggedIn(true);
   };
 
@@ -133,7 +136,7 @@ export default function App() {
 
   return (
     <div className="hub-container">
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} username={user.username} />
       
       <div className="main-wrapper animate-fade-in">
         <header style={{ marginBottom: '40px' }}>

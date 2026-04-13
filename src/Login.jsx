@@ -21,7 +21,7 @@ export default function Login({ onLogin }) {
       const data = await response.json();
 
       if (data.success) {
-        onLogin();
+        onLogin(username);
       } else {
         setError(data.message || 'Invalid username or password');
       }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Sidebar({ activeTab, setActiveTab }) {
+export default function Sidebar({ activeTab, setActiveTab, username }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const tabs = [
@@ -42,10 +42,9 @@ export default function Sidebar({ activeTab, setActiveTab }) {
 
           <div className="sidebar-footer">
             <div className="user-profile">
-              <div className="avatar">A</div>
+              <div className="avatar">{(username || 'A')[0].toUpperCase()}</div>
               <div className="user-info">
-                <span className="username">Ananya</span>
-                <span className="status">Academic Master</span>
+                <span className="username">{(username || 'Ananya').toUpperCase()}</span>
               </div>
             </div>
           </div>
