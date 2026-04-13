@@ -356,6 +356,28 @@ body {
   animation: fadeIn 0.6s ease forwards;
 }
 
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .main-wrapper {
+    padding: 40px 20px;
+  }
+  
+  .exam-table td {
+    padding: 12px 8px;
+  }
+
+  .exam-table td span {
+    font-size: 0.55rem !important;
+    padding: 2px 6px !important;
+    white-space: nowrap;
+  }
+
+  .exam-table th:last-child, 
+  .exam-table td:last-child {
+    width: 90px;
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
