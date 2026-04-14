@@ -704,6 +704,14 @@ body {
   padding-bottom: 12px;
 }
 
+.calendar-day-header .day-short {
+  display: none;
+}
+
+.calendar-day-header .day-full {
+  display: inline;
+}
+
 .calendar-day {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-color);
@@ -714,6 +722,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  overflow: hidden;
 }
 
 .calendar-day:hover {
@@ -772,14 +781,65 @@ body {
     gap: 16px;
   }
 
-  /* Stack form inputs on mobile */
-  .glass-panel.compact-panel > div {
+  /* Stack form inputs on mobile - NOT the calendar */
+  .glass-panel.compact-panel > div:not(.calendar-grid):not(.calendar-header) {
     grid-template-columns: 1fr !important;
     gap: 12px !important;
   }
 
   .sidebar {
     width: 260px;
+  }
+
+  /* Calendar mobile overrides - force 7 columns always */
+  .calendar-grid {
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 4px;
+  }
+
+  .calendar-day {
+    min-height: 54px;
+    padding: 6px 4px;
+    border-radius: 8px;
+    gap: 4px;
+  }
+
+  .calendar-day-header {
+    font-size: 0.55rem;
+    padding-bottom: 8px;
+    letter-spacing: 0;
+  }
+
+  .calendar-day-header .day-full {
+    display: none;
+  }
+
+  .calendar-day-header .day-short {
+    display: inline;
+  }
+
+  .calendar-day-num {
+    font-size: 0.75rem;
+  }
+
+  .exam-pill {
+    font-size: 0.5rem;
+    padding: 3px 4px;
+    border-radius: 6px;
+    white-space: normal;
+    word-break: break-word;
+    box-shadow: none;
+    border: none;
+  }
+
+  .calendar-header h2 {
+    font-size: 1.2rem !important;
+  }
+
+  .calendar-controls button {
+    padding: 6px 10px !important;
+    font-size: 0.75rem;
   }
 }
 

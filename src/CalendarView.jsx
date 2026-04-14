@@ -37,6 +37,7 @@ export default function CalendarView({ data }) {
 
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const daysOfWeekShort = ["S", "M", "T", "W", "T", "F", "S"];
 
   return (
     <div className="calendar-view animate-fade-in">
@@ -60,9 +61,12 @@ export default function CalendarView({ data }) {
         </div>
 
         <div className="calendar-grid">
-          {daysOfWeek.map(day => (
-            <div key={day} className="calendar-day-header">{day}</div>
-          ))}
+        {daysOfWeek.map((day, i) => (
+          <div key={day} className="calendar-day-header">
+            <span className="day-full">{day}</span>
+            <span className="day-short">{daysOfWeekShort[i]}</span>
+          </div>
+        ))}
 
           {/* Empty cells for days before the 1st */}
           {Array.from({ length: firstDayOfMonth }).map((_, i) => (
