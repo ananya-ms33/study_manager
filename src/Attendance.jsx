@@ -77,11 +77,11 @@ export default function Attendance({ data, saveData }) {
 
   return (
     <div className="attendance-view animate-fade-in">
-      <header className="view-header">
-        <h1 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.02em' }}>
-          Attendance <span style={{ color: 'var(--accent)', borderBottom: '4px solid var(--accent)' }}>Tracker</span>
+      <header className="view-header" style={{ marginBottom: '48px' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.02em', marginBottom: '16px' }}>
+          Attendance <span style={{ color: 'var(--accent)', borderBottom: '4px solid var(--accent)', paddingBottom: '6px' }}>Tracker</span>
         </h1>
-        <p style={{ color: 'var(--text-dim)', marginTop: '8px' }}>Separate tracking for Theory and Labs.</p>
+        <p style={{ color: 'var(--text-dim)', marginTop: '24px' }}>Separate tracking for Theory and Labs. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.4)' }}>"Time to make the chimichangas!"</span></p>
       </header>
 
       <section style={{ marginBottom: '40px' }}>
@@ -135,7 +135,24 @@ export default function Attendance({ data, saveData }) {
             <div key={a.id} className="glass-panel attendance-card" style={{ padding: '24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: '900', color: 'var(--text-main)' }}>{a.subject}</h3>
-                <button onClick={() => deleteCourse(a.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem' }}>Delete</button>
+                <button 
+                  onClick={() => deleteCourse(a.id)} 
+                  style={{ 
+                    background: 'linear-gradient(135deg, #ef4444, #b91c1c)', 
+                    border: 'none', 
+                    color: '#ffffff', 
+                    cursor: 'pointer', 
+                    fontSize: '0.75rem', 
+                    fontWeight: '800',
+                    padding: '6px 14px',
+                    borderRadius: '20px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    boxShadow: '0 4px 10px rgba(239, 68, 68, 0.3)'
+                  }}
+                >
+                  Delete
+                </button>
               </div>
 
               <div className="attendance-sections" style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
@@ -167,7 +184,7 @@ export default function Attendance({ data, saveData }) {
                     <div className="leaves-bar">
                       <div className="fill" style={{ 
                         width: `${Math.min(100, (a.absent / theoryStats.maxAbsentTotal) * 100)}%`,
-                        background: theoryStats.leavesAllowedHours < 3 ? '#ef4444' : 'var(--primary)'
+                        background: theoryStats.leavesAllowedHours < 3 ? '#ef4444' : 'var(--accent)'
                       }} />
                     </div>
                     <p>Leaves Left: <strong>{theoryStats.leavesAllowedHours} hours</strong></p>

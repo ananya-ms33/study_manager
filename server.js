@@ -11,7 +11,24 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const DATA_FILE = path.resolve(__dirname, 'exams.json');
 
-// Credentials (provided by user)
+// --- Manual .env loading ---
+const envPath = path.resolve(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf-8');
+  envContent.split(/\r?\n/).forEach(line => {
+    const trimmedLine = line.trim();
+    if (trimmedLine && !trimmedLine.startsWith('#')) {
+      const parts = trimmedLine.split('=');
+      const key = parts.shift().trim();
+      const value = parts.join('=').trim();
+      if (key) {
+        process.env[key] = value;
+      }
+    }
+  });
+}
+// -----------------------------------------------------------
+
 // Credentials (secured via Environment Variables)
 const USERNAME = process.env.ADMIN_USERNAME;
 const PASSWORD = process.env.ADMIN_PASSWORD;

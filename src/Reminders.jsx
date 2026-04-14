@@ -69,11 +69,11 @@ export default function Reminders({ data, saveData }) {
 
   return (
     <div className="reminders-view animate-fade-in">
-      <header className="view-header">
-        <h1 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.02em' }}>
-          My <span style={{ color: 'var(--primary)', borderBottom: '4px solid var(--primary)' }}>Reminders</span>
+      <header className="view-header" style={{ marginBottom: '48px' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: '900', letterSpacing: '-0.02em', marginBottom: '16px' }}>
+          My <span style={{ color: 'var(--primary)', borderBottom: '4px solid var(--primary)', paddingBottom: '6px' }}>Reminders</span>
         </h1>
-        <p style={{ color: 'var(--text-dim)', marginTop: '8px' }}>Stay on top of your tasks.</p>
+        <p style={{ color: 'var(--text-dim)', marginTop: '24px' }}>Stay on top of your tasks. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.4)' }}>"Whatever it takes."</span></p>
       </header>
 
       <section className="glass-panel compact-panel" style={{ marginBottom: '40px' }}>
@@ -133,7 +133,7 @@ export default function Reminders({ data, saveData }) {
           <div key={key} className="glass-panel" style={{ padding: '24px', marginBottom: '24px', borderLeft: '4px solid var(--primary)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <h3 style={{ fontSize: '0.9rem', fontWeight: '900', color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: '900', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                   {group.displayName}
                 </h3>
                 {!isDeleteMode && (
@@ -146,7 +146,7 @@ export default function Reminders({ data, saveData }) {
                         saveData(updated);
                       }
                     }}
-                    style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '1.2rem' }}
+                    style={{ background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontSize: '1.2rem' }}
                   >
                     +
                   </button>
@@ -199,6 +199,7 @@ export default function Reminders({ data, saveData }) {
         {Object.keys(grouped).length === 0 && (
           <div className="glass-panel" style={{ padding: '60px', textAlign: 'center', opacity: 0.5 }}>
             <p>No tasks found. Start by adding one above!</p>
+            <p style={{ fontSize: '0.8rem', marginTop: '10px', fontStyle: 'italic', color: 'var(--accent)' }}>"I can do this all day."</p>
           </div>
         )}
       </div>

@@ -37,7 +37,14 @@
       "tasks": []
     }
   ],
-  "reminders": [],
+  "reminders": [
+    {
+      "id": "09b3ea67-920e-41a0-ab20-d55de07e65b9",
+      "subject": "aa",
+      "text": "asd",
+      "completed": true
+    }
+  ],
   "attendance": [
     {
       "id": "71039b94-fbb7-47f9-a8ad-7baf5fc4444e",
@@ -58,7 +65,7 @@
       "hoursPerDay": "1",
       "credits": "4",
       "totalSemHours": 45,
-      "conducted": 14,
+      "conducted": 15,
       "absent": 1,
       "labConducted": null
     },
@@ -72,7 +79,7 @@
       "credits": "",
       "conducted": 12,
       "absent": 0,
-      "labConducted": 8,
+      "labConducted": 10,
       "labAbsent": 2
     }
   ]
