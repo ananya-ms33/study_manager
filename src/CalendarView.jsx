@@ -35,6 +35,50 @@ export default function CalendarView({ data }) {
     });
   };
 
+  const getAbsencesForDay = (day) => {
+    const absences = [];
+    data.attendance.forEach(subject => {
+      // Logic for Theory
+      const theoryAbsences = (subject.absentDates || []).filter(d => {
+        const [year, month, date] = d.split('-');
+        return (
+          parseInt(date, 10) === day &&
+          parseInt(month, 10) - 1 === currentDate.getMonth() &&
+          parseInt(year, 10) === currentDate.getFullYear()
+        );
+      });
+
+      if (theoryAbsences.length > 0) {
+        absences.push({
+          id: `${subject.id}-theory`,
+          subject: subject.subject,
+          count: theoryAbsences.length,
+          type: 'Theory'
+        });
+      }
+
+      // Logic for Lab
+      const labAbsences = (subject.labAbsentDates || []).filter(d => {
+        const [year, month, date] = d.split('-');
+        return (
+          parseInt(date, 10) === day &&
+          parseInt(month, 10) - 1 === currentDate.getMonth() &&
+          parseInt(year, 10) === currentDate.getFullYear()
+        );
+      });
+
+      if (labAbsences.length > 0) {
+        absences.push({
+          id: `${subject.id}-lab`,
+          subject: `${subject.subject} LAB`, // Removed parentheses to save space
+          count: labAbsences.length,
+          type: 'Lab'
+        });
+      }
+    });
+    return absences;
+  };
+
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const daysOfWeekShort = ["S", "M", "T", "W", "T", "F", "S"];
@@ -77,14 +121,23 @@ export default function CalendarView({ data }) {
           {Array.from({ length: daysInMonth }).map((_, i) => {
             const day = i + 1;
             const examsToday = getExamsForDay(day);
+            const absencesToday = getAbsencesForDay(day);
             return (
               <div key={day} className={`calendar-day ${isToday(day) ? 'today' : ''}`}>
                 <span className="calendar-day-num">{day}</span>
-                {examsToday.map(exam => (
-                  <div key={exam.id} className="exam-pill" title={exam.subject}>
-                    {exam.subject}
-                  </div>
-                ))}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {examsToday.map(exam => (
+                    <div key={exam.id} className="exam-pill" title={exam.subject}>
+                      {exam.subject}
+                    </div>
+                  ))}
+                  {absencesToday.map(abs => (
+                    <div key={abs.id} className="absence-pill" title={`${abs.count} ${abs.type} absence(s)`}>
+                      <span className="absence-count">{abs.count}</span>
+                      <span className="absence-label">{abs.subject}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             );
           })}

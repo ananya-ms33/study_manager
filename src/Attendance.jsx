@@ -22,7 +22,9 @@ export default function Attendance({ data, saveData }) {
       conducted: 0,
       absent: 0,
       labConducted: 0,
-      labAbsent: 0
+      labAbsent: 0,
+      absentDates: [], // For Theory
+      labAbsentDates: [] // For Lab
     };
     const updated = {
       ...data,
@@ -33,21 +35,24 @@ export default function Attendance({ data, saveData }) {
     setFormData({ subject: '', isLab: false, labDuration: '2', totalSemHours: '', totalLabHours: '', credits: '' });
   };
 
-  const updateAttendance = (id, type, val) => {
+  const updateAttendance = (id, type, val, isManual = false) => {
     const updated = {
       ...data,
       attendance: data.attendance.map(a => {
         if (a.id === id) {
+          if (isManual) {
+            return { ...a, [type]: parseInt(val) || 0 };
+          }
           // Find if we are incrementing/decrementing hours vs lab sessions
           const isLabAction = type.startsWith('lab');
           const multiplier = isLabAction ? a.labDuration : 1;
           const delta = val * multiplier;
           
-          const newVal = Math.max(0, a[type] + delta);
+          const newVal = Math.max(0, (a[type] || 0) + delta);
           
           // Validation: Absences can't exceed conducted hours
-          if (type === 'absent' && newVal > a.conducted) return a;
-          if (type === 'labAbsent' && newVal > a.labConducted) return a;
+          // Note: for dates, we'll handle this in the modal
+          if (type === 'absent' || type === 'labAbsent') return a; // Controlled by dates now
           
           return { ...a, [type]: newVal };
         }
@@ -55,6 +60,34 @@ export default function Attendance({ data, saveData }) {
       })
     };
     saveData(updated);
+  };
+
+  const [dateModal, setDateModal] = useState({ show: false, subjectId: null, type: null, isAdd: true });
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+
+  const handleAbsenceDate = (subjectId, type, date, isAdd) => {
+    const updated = {
+      ...data,
+      attendance: data.attendance.map(a => {
+        if (a.id === subjectId) {
+          const field = type === 'absent' ? 'absentDates' : 'labAbsentDates';
+          const currentDates = a[field] || [];
+          if (isAdd) {
+            return { ...a, [field]: [...currentDates, date] };
+          } else {
+            const index = currentDates.indexOf(date);
+            if (index > -1) {
+              const newDates = [...currentDates];
+              newDates.splice(index, 1);
+              return { ...a, [field]: newDates };
+            }
+          }
+        }
+        return a;
+      })
+    };
+    saveData(updated);
+    setDateModal({ show: false, subjectId: null, type: null, isAdd: true });
   };
 
   const calculateStats = (conducted, absent, total, isLab = false, labDuration = 2) => {
@@ -128,13 +161,29 @@ export default function Attendance({ data, saveData }) {
 
       <div className="attendance-grid">
         {data.attendance.map(a => {
-          const theoryStats = calculateStats(a.conducted, a.absent, a.totalSemHours);
-          const labStats = a.isLab ? calculateStats(a.labConducted, a.labAbsent, a.totalLabHours, true, a.labDuration) : null;
+          const tAbsent = a.absentDates?.length || a.absent || 0;
+          const lAbsent = a.labAbsentDates?.length || a.labAbsent || 0;
+          const theoryStats = calculateStats(a.conducted, tAbsent, a.totalSemHours);
+          const labStats = a.isLab ? calculateStats(a.labConducted, lAbsent, a.totalLabHours, true, a.labDuration) : null;
+
+          const combinedPercent = a.isLab && labStats
+            ? ((parseFloat(theoryStats.currentPercent) + parseFloat(labStats.currentPercent)) / 2).toFixed(1)
+            : null;
 
           return (
             <div key={a.id} className="glass-panel attendance-card" style={{ padding: '24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: '900', color: 'var(--text-main)' }}>{a.subject}</h3>
+                <div>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: '900', color: 'var(--text-main)', marginBottom: combinedPercent ? '8px' : 0 }}>{a.subject}</h3>
+                  {combinedPercent && (
+                    <div className="overall-badge-container">
+                      <span className="overall-label">Overall</span>
+                      <span className={`badge ${parseFloat(combinedPercent) < 75 ? 'danger' : 'success'} overall-badge`}>
+                        {combinedPercent}%
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <button 
                   onClick={() => deleteCourse(a.id)} 
                   style={{ 
@@ -167,16 +216,21 @@ export default function Attendance({ data, saveData }) {
                       <label>Conducted</label>
                       <div className="h-counter">
                         <button onClick={() => updateAttendance(a.id, 'conducted', -1)}>-</button>
-                        <span>{a.conducted}h</span>
+                        <input 
+                          type="number" 
+                          className="invisible-input" 
+                          value={a.conducted} 
+                          onChange={(e) => updateAttendance(a.id, 'conducted', e.target.value, true)}
+                        />
                         <button onClick={() => updateAttendance(a.id, 'conducted', 1)}>+</button>
                       </div>
                     </div>
                     <div className="dash-item">
                       <label>Absent</label>
                       <div className="h-counter danger">
-                        <button onClick={() => updateAttendance(a.id, 'absent', -1)}>-</button>
-                        <span>{a.absent}h</span>
-                        <button onClick={() => updateAttendance(a.id, 'absent', 1)}>+</button>
+                        <button onClick={() => setDateModal({ show: true, subjectId: a.id, type: 'absent', isAdd: false })}>-</button>
+                        <span>{tAbsent}h</span>
+                        <button onClick={() => setDateModal({ show: true, subjectId: a.id, type: 'absent', isAdd: true })}>+</button>
                       </div>
                     </div>
                   </div>
@@ -203,16 +257,21 @@ export default function Attendance({ data, saveData }) {
                         <label>Labs Conducted</label>
                         <div className="h-counter">
                           <button onClick={() => updateAttendance(a.id, 'labConducted', -1)}>-</button>
-                          <span>{a.labConducted / a.labDuration} sessions</span>
+                          <input 
+                            type="number" 
+                            className="invisible-input" 
+                            value={a.labConducted} 
+                            onChange={(e) => updateAttendance(a.id, 'labConducted', e.target.value, true)}
+                          />
                           <button onClick={() => updateAttendance(a.id, 'labConducted', 1)}>+</button>
                         </div>
                       </div>
                       <div className="dash-item">
                         <label>Labs Absent</label>
                         <div className="h-counter danger">
-                          <button onClick={() => updateAttendance(a.id, 'labAbsent', -1)}>-</button>
-                          <span>{a.labAbsent / a.labDuration} sessions</span>
-                          <button onClick={() => updateAttendance(a.id, 'labAbsent', 1)}>+</button>
+                          <button onClick={() => setDateModal({ show: true, subjectId: a.id, type: 'labAbsent', isAdd: false })}>-</button>
+                          <span>{lAbsent / a.labDuration} labs</span>
+                          <button onClick={() => setDateModal({ show: true, subjectId: a.id, type: 'labAbsent', isAdd: true })}>+</button>
                         </div>
                       </div>
                     </div>
@@ -232,6 +291,70 @@ export default function Attendance({ data, saveData }) {
           );
         })}
       </div>
+
+      {dateModal.show && (
+        <div className="modal-overlay" onClick={() => setDateModal({ show: false })}>
+          <div className="glass-panel modal-content animate-fade-in" onClick={e => e.stopPropagation()}>
+            <h3 style={{ marginBottom: '20px' }}>
+              {dateModal.isAdd ? 'Add Absence' : 'Remove Absence'} 
+              <span style={{ fontSize: '0.8rem', opacity: 0.6, marginLeft: '10px' }}>
+                ({data.attendance.find(s => s.id === dateModal.subjectId)?.subject} {dateModal.type === 'labAbsent' ? 'LAB' : 'Theory'})
+              </span>
+            </h3>
+            
+            {dateModal.isAdd ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div className="input-group">
+                  <label className="input-label">Select Date</label>
+                  <input 
+                    type="date" 
+                    className="glass-input" 
+                    value={selectedDate} 
+                    onChange={e => setSelectedDate(e.target.value)}
+                  />
+                </div>
+                <button 
+                  className="btn-primary" 
+                  onClick={() => handleAbsenceDate(dateModal.subjectId, dateModal.type, selectedDate, true)}
+                >
+                  Record Absence
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '300px', overflowY: 'auto' }}>
+                {(() => {
+                  const subject = data.attendance.find(s => s.id === dateModal.subjectId);
+                  const field = dateModal.type === 'absent' ? 'absentDates' : 'labAbsentDates';
+                  const dates = subject?.[field] || [];
+                  
+                  if (dates.length === 0) return <p style={{ textAlign: 'center', padding: '20px', opacity: 0.5 }}>No recorded absences</p>;
+                  
+                  return dates.map((d, i) => (
+                    <div key={i} className="date-item" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px' }}>
+                      <span style={{ fontWeight: '600' }}>{new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                      <button 
+                        className="btn-secondary" 
+                        style={{ padding: '4px 12px', fontSize: '0.7rem', color: '#ef4444' }}
+                        onClick={() => handleAbsenceDate(dateModal.subjectId, dateModal.type, d, false)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ));
+                })()}
+              </div>
+            )}
+            
+            <button 
+              className="btn-secondary" 
+              style={{ width: '100%', marginTop: '20px' }} 
+              onClick={() => setDateModal({ show: false })}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

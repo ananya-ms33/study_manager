@@ -131,6 +131,17 @@ export default function App() {
     setIsLoggedIn(false);
   };
 
+  const clearAllData = async () => {
+    const input = prompt("⚠️ WARNING: This will permanently delete ALL exams, reminders, and attendance data.\n\nType 'delete' (lowercase) to confirm semester reset:");
+    
+    if (input === 'delete') {
+      const resetData = { exams: [], reminders: [], attendance: [] };
+      await saveData(resetData);
+    } else if (input !== null) {
+      alert("Reset cancelled. Confirmation text did not match.");
+    }
+  };
+
   if (!isLoggedIn) {
     return <Login onLogin={handleLogin} />;
   }
@@ -154,9 +165,24 @@ export default function App() {
                   E.D.I.T.H. <span style={{ color: 'var(--primary)' }}>Network</span>
                 </h1>
               </div>
-              <button onClick={handleLogout} className="btn-secondary" style={{ fontSize: '0.7rem', padding: '8px 16px' }}>
-                Logout
-              </button>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button 
+                  onClick={clearAllData} 
+                  className="btn-secondary" 
+                  style={{ 
+                    fontSize: '0.7rem', 
+                    padding: '8px 16px', 
+                    color: '#ef4444', 
+                    borderColor: 'rgba(239, 68, 68, 0.2)',
+                    background: 'rgba(239, 68, 68, 0.05)'
+                  }}
+                >
+                  End Semester
+                </button>
+                <button onClick={handleLogout} className="btn-secondary" style={{ fontSize: '0.7rem', padding: '8px 16px' }}>
+                  Logout
+                </button>
+              </div>
             </div>
           </header>
 

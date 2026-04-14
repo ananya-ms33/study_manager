@@ -55,7 +55,10 @@
       "credits": "4",
       "totalSemHours": 60,
       "conducted": 63,
-      "absent": 17
+      "absent": 17,
+      "absentDates": [
+        "2026-04-14"
+      ]
     },
     {
       "id": "82cc22b6-7644-4f01-bb74-5ec2fb7e7fb0",
@@ -65,9 +68,13 @@
       "hoursPerDay": "1",
       "credits": "4",
       "totalSemHours": 45,
-      "conducted": 15,
-      "absent": 1,
-      "labConducted": null
+      "conducted": 34,
+      "absent": 2,
+      "labConducted": null,
+      "absentDates": [
+        "2026-04-14",
+        "2026-04-14"
+      ]
     },
     {
       "id": "3b3427e6-7a35-49be-88b0-6d508203155d",
@@ -79,8 +86,11 @@
       "credits": "",
       "conducted": 12,
       "absent": 0,
-      "labConducted": 10,
-      "labAbsent": 2
+      "labConducted": 14,
+      "labAbsent": 2,
+      "absentDates": [
+        "2026-04-14"
+      ]
     }
   ]
 }
