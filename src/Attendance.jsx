@@ -90,36 +90,38 @@ export default function Attendance({ data, saveData }) {
         ) : (
           <div className="glass-panel compact-panel animate-fade-in">
             <h2 className="section-title">Course Entry</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', marginBottom: '24px' }}>
-              <div className="input-group">
-                <label className="input-label">Subject</label>
-                <input className="glass-input" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} placeholder="e.g. DAA" />
+            <form onSubmit={(e) => { e.preventDefault(); addSubject(); }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+                <div className="input-group">
+                  <label className="input-label">Subject</label>
+                  <input className="glass-input" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} placeholder="e.g. DAA" required />
+                </div>
+                <div className="input-group">
+                  <label className="input-label">Theory Total Hrs</label>
+                  <input type="number" className="glass-input" value={formData.totalSemHours} onChange={e => setFormData({...formData, totalSemHours: e.target.value})} placeholder="e.g. 45" required />
+                </div>
+                <div className="input-group" style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingTop: '32px' }}>
+                  <input type="checkbox" className="round-checkbox" id="isLab" checked={formData.isLab} onChange={e => setFormData({...formData, isLab: e.target.checked})} />
+                  <label htmlFor="isLab" className="input-label" style={{ marginBottom: 0 }}>Has Lab?</label>
+                </div>
+                {formData.isLab && (
+                  <>
+                    <div className="input-group">
+                      <label className="input-label">Lab Total Hrs</label>
+                      <input type="number" className="glass-input" value={formData.totalLabHours} onChange={e => setFormData({...formData, totalLabHours: e.target.value})} placeholder="e.g. 30" required />
+                    </div>
+                    <div className="input-group">
+                      <label className="input-label">Hrs per Lab</label>
+                      <input type="number" className="glass-input" value={formData.labDuration} onChange={e => setFormData({...formData, labDuration: e.target.value})} required />
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="input-group">
-                <label className="input-label">Theory Total Hrs</label>
-                <input type="number" className="glass-input" value={formData.totalSemHours} onChange={e => setFormData({...formData, totalSemHours: e.target.value})} placeholder="e.g. 45" />
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button type="submit" className="btn-primary">Add Subject</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowAdd(false)}>Cancel</button>
               </div>
-              <div className="input-group" style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingTop: '32px' }}>
-                <input type="checkbox" className="round-checkbox" id="isLab" checked={formData.isLab} onChange={e => setFormData({...formData, isLab: e.target.checked})} />
-                <label htmlFor="isLab" className="input-label" style={{ marginBottom: 0 }}>Has Lab?</label>
-              </div>
-              {formData.isLab && (
-                <>
-                  <div className="input-group">
-                    <label className="input-label">Lab Total Hrs</label>
-                    <input type="number" className="glass-input" value={formData.totalLabHours} onChange={e => setFormData({...formData, totalLabHours: e.target.value})} placeholder="e.g. 30" />
-                  </div>
-                  <div className="input-group">
-                    <label className="input-label">Hrs per Lab</label>
-                    <input type="number" className="glass-input" value={formData.labDuration} onChange={e => setFormData({...formData, labDuration: e.target.value})} />
-                  </div>
-                </>
-              )}
-            </div>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button className="btn-primary" onClick={addSubject}>Add Subject</button>
-              <button className="btn-secondary" onClick={() => setShowAdd(false)}>Cancel</button>
-            </div>
+            </form>
           </div>
         )}
       </section>

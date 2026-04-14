@@ -162,30 +162,34 @@ export default function App() {
                 <h2 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '24px', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ color: 'var(--primary)' }}>✦</span> Add Exam
                 </h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-                  <div>
-                    <label className="input-label">Subject</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. DBMS"
-                      className="glass-input"
-                      value={subject}
-                      onChange={(e) => setSubject(e.target.value)}
-                    />
+                <form onSubmit={(e) => { e.preventDefault(); addExam(); }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+                    <div>
+                      <label className="input-label">Subject</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. DBMS"
+                        className="glass-input"
+                        value={subject}
+                        onChange={(e) => setSubject(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="input-label">Date</label>
+                      <input
+                        type="date"
+                        className="glass-input"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="input-label">Date</label>
-                    <input
-                      type="date"
-                      className="glass-input"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <button onClick={addExam} className="btn-primary" style={{ width: '100%', marginTop: '8px' }}>
-                  Add to Schedule
-                </button>
+                  <button type="submit" className="btn-primary" style={{ width: '100%', marginTop: '8px' }}>
+                    Add to Schedule
+                  </button>
+                </form>
               </section>
 
               <section>
@@ -212,18 +216,23 @@ export default function App() {
                       </div>
                       <div className="segment-content" style={{ padding: '0 24px 20px 24px' }}>
                         <div style={{ marginBottom: '16px' }}>
-                          <input
-                            type="text"
-                            placeholder="Study Chapter..."
-                            className="glass-input"
-                            style={{ fontSize: '0.85rem' }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                addTask(exam.id, e.target.value);
-                                e.target.value = "";
-                              }
-                            }}
-                          />
+                          <form onSubmit={(e) => {
+                            e.preventDefault();
+                            const input = e.target.elements.taskInput;
+                            if (input.value.trim()) {
+                              addTask(exam.id, input.value.trim());
+                              input.value = "";
+                            }
+                          }}>
+                            <input
+                              name="taskInput"
+                              type="text"
+                              placeholder="Study Chapter..."
+                              className="glass-input"
+                              style={{ fontSize: '0.85rem' }}
+                              autoComplete="off"
+                            />
+                          </form>
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           {exam.tasks.map((task) => (

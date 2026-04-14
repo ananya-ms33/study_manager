@@ -80,28 +80,31 @@ export default function Reminders({ data, saveData }) {
         <h2 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '24px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
           Add Task
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr auto', gap: '16px', alignItems: 'end' }}>
-          <div>
-            <label className="input-label">New Subject</label>
-            <input 
-              className="glass-input" 
-              placeholder="e.g. Maths" 
-              value={newSubject}
-              onChange={(e) => setNewSubject(e.target.value)}
-            />
+        <form onSubmit={(e) => { e.preventDefault(); addReminder(); }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr auto', gap: '16px', alignItems: 'end' }}>
+            <div>
+              <label className="input-label">New Subject</label>
+              <input 
+                className="glass-input" 
+                placeholder="e.g. Maths" 
+                value={newSubject}
+                onChange={(e) => setNewSubject(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label className="input-label">Task Details</label>
+              <input 
+                className="glass-input" 
+                placeholder="What needs to be done?" 
+                value={newReminder}
+                onChange={(e) => setNewReminder(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn-primary">Add</button>
           </div>
-          <div>
-            <label className="input-label">Task Details</label>
-            <input 
-              className="glass-input" 
-              placeholder="What needs to be done?" 
-              value={newReminder}
-              onChange={(e) => setNewReminder(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && addReminder()}
-            />
-          </div>
-          <button className="btn-primary" onClick={() => addReminder()}>Add</button>
-        </div>
+        </form>
       </section>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
